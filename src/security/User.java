@@ -6,7 +6,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import security.Encryption.TYPE;
-import security.StringGenerator.Mode;
+import util.StringGenerator;
+import util.StringGenerator.Mode;
 public class User {
 	String userid, password, status;
 	static String current_user;

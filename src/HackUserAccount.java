@@ -7,7 +7,10 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -22,6 +25,7 @@ public class HackUserAccount {
 	static JLabel jl_status, jl_password_check;
 	static ArrayList<Component> comps;
 	static String[] args;
+	static JTextField jt_username;
 	
 	public static void main(String[] args){
 		mframe = new JFrame("Hacking Login");
@@ -52,7 +56,7 @@ public class HackUserAccount {
 		cons.gridwidth = 3;
 		panel.add(jl_username, cons);	
 		
-		JTextField jt_username = new JTextField(25);
+		jt_username = new JTextField(25);
 		cons.gridx = 3;
 		cons.gridy = 0;
 		cons.gridwidth = 3;
@@ -91,18 +95,28 @@ public class HackUserAccount {
 	
 	
 	public static void runHack(){
-		jtextf.get(0).setText("shabs");
-		for(int i = 0; i < 3; i++){
-			System.out.println("Hack number: "+i);
-			String password = "asS1PTK321qK2cP";
-			jtextf.get(1).setText(password);
-			jl_password_check.setText("password: "+password);
-			blogin.doClick();
-			ArrayList<Component> c = getAllComponents(frame);
-			if(c.size() != comps.size()){				
-				break;
+		String user = jt_username.getText().toString();
+		jtextf.get(0).setText(user);
+		String filepre = "dictionarylist";
+		try{
+			File file = new File("assets/data/"+filepre+"8-12.txt");
+			Scanner scan = new Scanner(file);
+			int counter = 0;
+			while(scan.hasNextLine()){
+				String password = scan.nextLine();
+				jtextf.get(0).setText(password);
+				counter++;
+				System.out.println("Hack number: "+counter+" password: "+password);
+				jl_password_check.setText("password: "+password);
+				blogin.doClick();
+				ArrayList<Component> c = getAllComponents(frame);
+				if(c.size() != comps.size()){		
+					System.out.println("Not the same screen");		
+					break;
+				}
 			}
-			
+		}catch(IOException e){
+			e.printStackTrace();
 		}
 	}
 	
