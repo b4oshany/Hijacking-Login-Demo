@@ -16,6 +16,7 @@ public class DictionaryListGenerator {
 	
 	public static File getFile(int minchar, int maxchar, int num_words){
 		String filename = "assets/data/dictionarylist"+minchar+"-"+maxchar+"-"+num_words+".txt";
+		System.out.println("Getting dictionary list "+filename);
 		File file = new File(filename);
 		if(file.exists())
 			return file;
@@ -24,8 +25,8 @@ public class DictionaryListGenerator {
 	}
 	
 	public static void generateFile(int minchar, int maxchar, int num_words){
-		System.out.println("Generating dictionary list");
 		String content = "", filename = "assets/data/dictionarylist"+minchar+"-"+maxchar+"-"+num_words+".txt";
+		System.out.println("Generating dictionary list "+filename);
 		try{
 			for(int i = 0; i < num_words; i++){
 				content += StringGenerator.generateRandomString(minchar, maxchar, Mode.ALPHANUMERIC)+"\n";

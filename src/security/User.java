@@ -61,18 +61,18 @@ public class User {
 		}
 	}
 	
-	public static String readUser(String userinfo){
+	public static String[] readUser(String userinfo){
 		try {
 			if(!file.exists())
 				return null;
 			Scanner scan = new Scanner(file);
-			String userdata = null;
+			String[] userdata = null;
 			String line;
 			while(scan.hasNextLine()){
 				line = scan.nextLine();
-				String[] ud = line.split(userinfo);
+				String[] ud = line.split(",");
 				if(ud[0].equals(userinfo)){
-					userdata = line;
+					userdata = ud;
 					break;
 				}
 			}
@@ -111,7 +111,7 @@ public class User {
 				line = scan.nextLine();
 				data = line.split(",");
 				if(data[0].equals(userid)){
-					System.out.println("changeing user status");
+					System.out.println("changing user status");
 					System.out.println(line);
 					data[2] = status;
 					line = data[0]+","+data[1]+","+data[2];
@@ -136,14 +136,14 @@ public class User {
 	
 	public static String[] verifyUser(String userid, String password){
 		try{
+			password.trim();
 			String ent_password = Encryption.encrypt(TYPE.SHA, password);
-			String userdata = readUser(userid);
-			System.out.println(ent_password);
-			System.out.println(userdata);
+			String[] userdata = readUser(userid);
+			System.out.printf("user %s, password %s, %s\n", userid, ent_password, userdata[2]);
 			if(userdata != null){
-				if(userdata.contains("locekd")){
+				if((userdata[2].equals("locked")) && (userdata[1].equals(ent_password))){
 					return new String[]{"false", userid+" has been locked"};
-				}else if(userdata.contains(ent_password)){
+				}else if(userdata[1].equals(ent_password)){
 					return new String[]{"true", userid+" user has been verified"};
 				}
 				return new String[]{"false", "incorrect password or username"};
