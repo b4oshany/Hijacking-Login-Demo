@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import security.User;
 public class UserAccountForm {
 	static JFrame frame;
+	public static int numclick = 0;
 	public static void main(String[] args){
 		frame = new JFrame("User login");		
 		UserLoginPanel userlogin = new UserLoginPanel();
@@ -53,6 +54,7 @@ public class UserAccountForm {
 				status_message = "";
 				//if the user is on the login page and click the login button, then check user credentials else pass show the register page on click
 				if(page.equals("login")){
+					numclick++;
 					String username = jt_username.getText().toLowerCase();
 					String password = jt_password.getText().toString();
 					int num_attempts = 0;
@@ -69,6 +71,10 @@ public class UserAccountForm {
 							User.setCurrentUser(username);
 							welcomeView();
 						}else{
+							if(result[1].contains("has been locked")){
+								User.setCurrentUser(username+"\n\n, Your account has been blocked");
+								welcomeView();
+							}
 							login_attempts.add(username);
 							displayStatusMessage(result[1]);
 						}
