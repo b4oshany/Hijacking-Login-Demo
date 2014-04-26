@@ -178,6 +178,7 @@ public class HackUserAccount {
 	}
 
 	public static boolean dictionaryAttack(File file) {
+		String password = "N/A";
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -185,15 +186,14 @@ public class HackUserAccount {
 				active = true;
 				while(active){
 					endTime = System.currentTimeMillis();
-					jl_password_check.setText("password attempt: "
-							+ password_attempts + "\n\n time: "
+					jl_password_check.setText("password "+password+", password attempt: "
+							+ password_attempts + ",\n\n time: "
 							+ ((endTime - startTime) / 1000) + " seconds");
 				}
 				
 			}
 		});
 		thread.start();
-		String password = "N/A";
 		try {
 			Scanner scan = new Scanner(file);
 			String user;
