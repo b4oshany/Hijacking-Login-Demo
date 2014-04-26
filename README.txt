@@ -1,9 +1,10 @@
-@author:        Oshane Bailey
-@id:            620042528
-@project nane:  Dictionary Attack
+@author:              Oshane Bailey
+@id:                  620042528
+@project nane:        Dictionary Attack
 
-@Demo:          https://www.youtube.com/watch?v=yqCx9HLmJqQ
-@git repo:      https://github.com/b4oshany/Hijacking-Login-Demo
+@short video demo:    https://www.youtube.com/watch?v=4miRC8fJAo8&edit=vd
+@long video Demo:     https://www.youtube.com/watch?v=yqCx9HLmJqQ
+@git repo:            https://github.com/b4oshany/Hijacking-Login-Demo
 
 Description:
 -------------------------------- User Login -----------------------------------
