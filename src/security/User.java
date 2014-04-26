@@ -70,12 +70,13 @@ public class User {
 			if(!file.exists())
 				return null;
 			Scanner scan = new Scanner(file);
-			String userdata = null, data;
+			String userdata = null;
+			String line;
 			while(scan.hasNextLine()){
-				data = scan.nextLine();
-				String[] ud = data.split(userinfo);
+				line = scan.nextLine();
+				String[] ud = line.split(userinfo);
 				if(ud[0].equals(userinfo)){
-					userdata = data;
+					userdata = line;
 					break;
 				}
 			}
@@ -109,19 +110,19 @@ public class User {
 		try {
 			Scanner scan = new Scanner(file);
 			String usersdata = "";
-			String line = "";
+			String line;
 			String[] data;
-			while(scan.hasNext()){
-				line = scan.next();
+			while(scan.hasNextLine()){
+				line = scan.nextLine();
 				data = line.split(",");
 				if(data[0].equals(userid)){
-					String[] userdata = data;
-					userdata[2] = status;
-					line = userdata[0]+","+userdata[1]+","+userdata[2];
+					System.out.println("changeing user status");
+					System.out.println(line);
+					data[2] = status;
+					line = data[0]+","+data[1]+","+data[2];
 				}
 				usersdata += line+"\n";
 			}
-			System.out.println(usersdata);
 			scan.close();
 			FileOutputStream fout = new FileOutputStream(file);			
 			fout.write(usersdata.getBytes());

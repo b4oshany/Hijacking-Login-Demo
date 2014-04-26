@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -30,6 +28,7 @@ public class HackUserAccount {
 	static JTextField jt_username, jt_minchar, jt_maxchar, jt_attempts;
 	static int password_attempts = 0, minchar = 8, maxchar = 16, max_attempts = 2000;
 	static boolean active = true;
+	static Thread hack_thread, login_thread;
 	
 	public static void main(String[] args){
 		mframe = new JFrame("Hacking Login");
@@ -41,7 +40,7 @@ public class HackUserAccount {
 		mframe.getContentPane().add(panel);
 		mframe.setVisible(true);
 		mframe.pack();
-		mframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		mframe.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		mframe.setBackground(Color.gray);
 		mframe.setSize(600, 500);
 	}
@@ -112,18 +111,12 @@ public class HackUserAccount {
 		cons.gridwidth = 6;
 		panel.add(jl_password_check, cons);
 		
+		setUserLoginFrame();
 		bn_hack.addActionListener(new ActionListener() {			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method study
-				UserAccountForm.main(args);
-				Component[] comps = Frame.getFrames();
-				for(Component comp : comps){
-					if(((JFrame) comp).getTitle().equals("User login")){
-						frame = (JFrame) comp;
-						break;
-					}					
-				}
+				setUserLoginFrame();
 				try{
 					minchar = Integer.parseInt(jt_minchar.getText().toString());
 					System.out.println("minimum character length is "+minchar);
@@ -152,9 +145,28 @@ public class HackUserAccount {
 		return panel;
 	}
 	
+	public static void setUserLoginFrame(){
+		login_thread = new Thread(new Runnable(){		
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				UserAccountForm.main(args);
+			}
+		});
+		login_thread.start();
+		Component[] comps = Frame.getFrames();
+		for(Component comp : comps){
+			if(((JFrame) comp).getTitle().equals("User login")){
+				frame = (JFrame) comp;
+				frame.setVisible(false);
+				frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+				break;
+			}					
+		}
+	}
 	
 	public static void runHack(){
-		Thread thread = new Thread(new Runnable(){
+		hack_thread = new Thread(new Runnable(){
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
@@ -167,7 +179,7 @@ public class HackUserAccount {
 			HackUserAccount.dictionaryAttack(file);
 			}
 		});
-		thread.start();
+		hack_thread.start();
 	}
 	
 	public static boolean dictionaryAttack(File file){
@@ -177,10 +189,9 @@ public class HackUserAccount {
 			while(scan.hasNextLine()){
 				endTime = System.currentTimeMillis();
 				String password = scan.nextLine();
-				jtextf.get(0).setText(password);
-				password_attempts++;
+				jtextf.get(1).setText(password);
 				jl_password_check.setText("password attempt: "+password_attempts+"\n\n time: "+((endTime - startTime)/1000)+" seconds");
-				System.out.println("Hack number: "+password_attempts+" password: "+password);
+				System.out.println(jtextf.get(0).getText().toString()+" Hack number: "+password_attempts+" password: "+password);
 				blogin.doClick();
 				ArrayList<Component> c = getAllComponents(frame);
 				if(c.size() != comps.size()){		
@@ -188,12 +199,19 @@ public class HackUserAccount {
 					jl_password_check.setText("password: "+password);
 					return true;
 				}
+				getFields();
+				password_attempts++;
 			}
+			login_thread.join();
 			return false;
 		}catch(IOException e){
 			e.printStackTrace();
 			return false;
-		}
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} 
 	}
 	
 	public static void getFields(){
