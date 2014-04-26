@@ -63,11 +63,14 @@ public class User {
 	
 	public static String readUser(String userinfo){
 		try {
+			if(!file.exists())
+				return null;
 			Scanner scan = new Scanner(file);
 			String userdata = null;
-			while(scan.hasNext()){
-				userdata = scan.next();
-				if(userdata.contains(userinfo)){
+			while(scan.hasNextLine()){
+				userdata = scan.nextLine();
+				String[] ud = userdata.split(userinfo);
+				if(ud[0].equals(userinfo)){
 					break;
 				}
 			}
@@ -131,6 +134,8 @@ public class User {
 		try{
 			String ent_password = Encryption.encrypt(TYPE.SHA, password);
 			String userdata = readUser(userid);
+			System.out.println(ent_password);
+			System.out.println(userdata);
 			if(userdata != null){
 				if(userdata.contains("locekd")){
 					return new String[]{"false", userid+" has been locked"};

@@ -10,15 +10,25 @@ public class DictionaryListGenerator {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		//generate 1000 words
-		DictionaryListGenerator.generateFile("assets/data/dictionarylist8-12.txt", 8, 12, 4000);
-		DictionaryListGenerator.generateFile("assets/data/dictionarylist13-20.txt", 13, 20, 1000);
+		DictionaryListGenerator.generateFile(8, 12, 4000);
+		DictionaryListGenerator.generateFile(13, 20, 1000);
 	}
 	
-	public static void generateFile(String filename, int min_characterlen, int max_characterlen, int num_words){
-		String content = "";
+	public static File getFile(int minchar, int maxchar, int num_words){
+		String filename = "assets/data/dictionarylist"+minchar+"-"+maxchar+"-"+num_words+".txt";
+		File file = new File(filename);
+		if(file.exists())
+			return file;
+		generateFile(minchar, maxchar, 2000);
+		return getFile(minchar, maxchar, 2000);
+	}
+	
+	public static void generateFile(int minchar, int maxchar, int num_words){
+		System.out.println("Generating dictionary list");
+		String content = "", filename = "assets/data/dictionarylist"+minchar+"-"+maxchar+"-"+num_words+".txt";
 		try{
 			for(int i = 0; i < num_words; i++){
-				content += StringGenerator.generateRandomString(min_characterlen, max_characterlen, Mode.ALPHANUMERIC)+"\n";
+				content += StringGenerator.generateRandomString(minchar, maxchar, Mode.ALPHANUMERIC)+"\n";
 			}
 			File file = new File(filename);
 			if(!file.exists())
