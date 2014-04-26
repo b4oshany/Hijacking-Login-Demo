@@ -42,13 +42,17 @@ public class User {
 	}
 	
 	public void saveUser(){	
+		System.out.println("Saving user");
 		if(readUser(this.userid) == null){
+			System.out.println("Saving user");
 			try { 
 				if(!file.exists()){
 					file.createNewFile();
 				}
 				FileOutputStream fout = new FileOutputStream(file, true);
 				String data = this.userid+","+this.password+","+this.status+"\n";
+				System.out.println("Saving user");
+				System.out.println(data);
 				fout.write(data.getBytes());
 				fout.close();
 			} catch (FileNotFoundException e) {
@@ -66,15 +70,17 @@ public class User {
 			if(!file.exists())
 				return null;
 			Scanner scan = new Scanner(file);
-			String userdata = null;
+			String userdata = null, data;
 			while(scan.hasNextLine()){
-				userdata = scan.nextLine();
-				String[] ud = userdata.split(userinfo);
+				data = scan.nextLine();
+				String[] ud = data.split(userinfo);
 				if(ud[0].equals(userinfo)){
+					userdata = data;
 					break;
 				}
 			}
 			scan.close();
+			System.out.println(userdata);
 			return userdata;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -103,11 +109,13 @@ public class User {
 		try {
 			Scanner scan = new Scanner(file);
 			String usersdata = "";
-			String line;
+			String line = "";
+			String[] data;
 			while(scan.hasNext()){
 				line = scan.next();
-				if(line.contains(userid)){
-					String[] userdata = line.split(",");
+				data = line.split(",");
+				if(data[0].equals(userid)){
+					String[] userdata = data;
 					userdata[2] = status;
 					line = userdata[0]+","+userdata[1]+","+userdata[2];
 				}
