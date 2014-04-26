@@ -65,23 +65,31 @@ public class UserAccountForm {
 							}
 						}
 					}
+					System.out.println(username);
+					String[] result = User.verifyUser(username, password);
+					System.out.println(result[1]);
 					if(num_attempts < 3){
-						String[] result = User.verifyUser(username, password);
 						if(result[0].equals("true")){
 							User.setCurrentUser(username);
 							welcomeView();
-						}else{
+						}else{		
 							if(result[1].contains("has been locked")){
 								User.setCurrentUser(username+"\n\n, Your account has been blocked");
 								welcomeView();
+							}else{		
+								login_attempts.add(username);
+								displayStatusMessage(result[1]);
 							}
-							login_attempts.add(username);
-							displayStatusMessage(result[1]);
 						}
 					}else{
-						System.out.println("going to be locked");
-						User.setUserAccountStatus(username, "locked");
-						displayStatusMessage(username+" has been locked because\nof numerous login attempt");
+						if(result[1].contains("has been locked")){
+							User.setCurrentUser(username+"\n\n, Your account has been blocked");
+							welcomeView();
+						}else{
+							System.out.println("going to be locked");
+							User.setUserAccountStatus(username, "locked");
+							displayStatusMessage(username+" has been locked because\nof numerous login attempt");
+						}
 					}
 				}else{
 					loginView();

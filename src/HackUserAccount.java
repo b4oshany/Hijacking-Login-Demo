@@ -26,220 +26,242 @@ public class HackUserAccount {
 	static ArrayList<Component> comps;
 	static String[] args;
 	static JTextField jt_username, jt_minchar, jt_maxchar, jt_attempts;
-	static int password_attempts = 0, minchar = 8, maxchar = 16, max_attempts = 2000;
-	static boolean active = true;
+	static int password_attempts = 0, minchar = 8, maxchar = 16,
+			max_attempts = 2000;
+	static boolean active = true, login_running = false;
 	static Thread hack_thread, login_thread;
-	
-	public static void main(String[] args){
+
+	public static void main(String[] args) {
 		mframe = new JFrame("Hacking Login");
 		HackUserAccount.args = args;
 		show(hackView());
-	}	
+	}
 
-	public static void show(JPanel panel){
+	public static void show(JPanel panel) {
 		mframe.getContentPane().add(panel);
 		mframe.setVisible(true);
 		mframe.pack();
-		mframe.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		mframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mframe.setBackground(Color.gray);
 		mframe.setSize(600, 500);
 	}
-	
-	public static JPanel hackView(){
+
+	public static JPanel hackView() {
 		JPanel panel = new JPanel(new GridBagLayout());
 		GridBagConstraints cons = new GridBagConstraints();
 		panel.setBackground(Color.gray);
 		cons.fill = GridBagConstraints.HORIZONTAL;
-		cons.insets = new Insets(5, 5, 5, 5);	
-		
+		cons.insets = new Insets(5, 5, 5, 5);
+
 		JLabel jl_username = new JLabel("Username");
 		cons.gridx = 0;
 		cons.gridy = 0;
 		cons.gridwidth = 3;
-		panel.add(jl_username, cons);	
-		
+		panel.add(jl_username, cons);
+
 		jt_username = new JTextField(25);
 		cons.gridx = 3;
 		cons.gridy = 0;
 		cons.gridwidth = 3;
 		panel.add(jt_username, cons);
-		
+
 		JLabel jl_minchar = new JLabel("Minimum Password Characters");
 		cons.gridx = 0;
 		cons.gridy = 2;
-		panel.add(jl_minchar, cons);	
-		
+		panel.add(jl_minchar, cons);
+
 		jt_minchar = new JTextField(4);
 		cons.gridx = 3;
 		cons.gridy = 2;
 		cons.gridwidth = 3;
 		panel.add(jt_minchar, cons);
-		
+
 		JLabel jl_maxchar = new JLabel("Maximum Passowrd Characters");
 		cons.gridx = 0;
 		cons.gridy = 4;
 		cons.gridwidth = 3;
-		panel.add(jl_maxchar, cons);	
-		
+		panel.add(jl_maxchar, cons);
+
 		jt_maxchar = new JTextField(4);
 		cons.gridx = 3;
 		cons.gridy = 4;
 		cons.gridwidth = 3;
 		panel.add(jt_maxchar, cons);
-		
+
 		JLabel jl_attempts = new JLabel("Numbers of attempts");
 		cons.gridx = 0;
 		cons.gridy = 6;
 		cons.gridwidth = 3;
-		panel.add(jl_attempts, cons);	
-		
+		panel.add(jl_attempts, cons);
+
 		jt_attempts = new JTextField(10);
 		cons.gridx = 3;
 		cons.gridy = 6;
 		cons.gridwidth = 3;
-		panel.add(jt_attempts, cons);		
-		
+		panel.add(jt_attempts, cons);
+
 		JButton bn_hack = new JButton("Hack");
 		cons.gridx = 0;
 		cons.gridy = 8;
 		cons.gridwidth = 3;
 		panel.add(bn_hack, cons);
-		
+
 		jl_password_check = new JLabel("");
 		cons.gridx = 0;
 		cons.gridy = 10;
 		cons.gridwidth = 6;
 		panel.add(jl_password_check, cons);
-		
-		setUserLoginFrame();
-		bn_hack.addActionListener(new ActionListener() {			
+		UserAccountForm.main(args);
+		bn_hack.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method study
-				setUserLoginFrame();
-				try{
+				setUserLoginFrame();	
+				try {
 					minchar = Integer.parseInt(jt_minchar.getText().toString());
-					System.out.println("minimum character length is "+minchar);
-				}catch(NumberFormatException e1){
+					System.out
+							.println("minimum character length is " + minchar);
+				} catch (NumberFormatException e1) {
 					System.out.println("minimum character length is 8");
 				}
 
-				try{
-					max_attempts = Integer.parseInt(jt_attempts.getText().toString());
-					System.out.println("maximum password attempts is "+max_attempts);
-				}catch(NumberFormatException e1){
+				try {
+					max_attempts = Integer.parseInt(jt_attempts.getText()
+							.toString());
+					System.out.println("maximum password attempts is "
+							+ max_attempts);
+				} catch (NumberFormatException e1) {
 					System.out.println("maximum password attempts is 2000");
 				}
 
-				try{
+				try {
 					maxchar = Integer.parseInt(jt_maxchar.getText().toString());
-					System.out.println("maximum character length is "+maxchar);
-				}catch(NumberFormatException e1){
+					System.out
+							.println("maximum character length is " + maxchar);
+				} catch (NumberFormatException e1) {
 					System.out.println("maximum character length is 16");
 				}
 				getFields();
-				active = true;	
+				active = true;
 				runHack();
 			}
-		} );
+		});
 		return panel;
 	}
-	
-	public static void setUserLoginFrame(){
-		login_thread = new Thread(new Runnable(){		
+
+		
+	public static void setUserLoginFrame() {	
+		Component[] comps = Frame.getFrames();
+		for (Component comp : comps) {
+			if (((JFrame) comp).getTitle().equals("User login")) {
+				frame = (JFrame) comp;
+				break;
+			}
+		}
+	}
+
+	public static void runHack() {
+		hack_thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
-				UserAccountForm.main(args);
-			}
-		});
-		login_thread.start();
-		Component[] comps = Frame.getFrames();
-		for(Component comp : comps){
-			if(((JFrame) comp).getTitle().equals("User login")){
-				frame = (JFrame) comp;
-				frame.setVisible(false);
-				frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-				break;
-			}					
-		}
-	}
-	
-	public static void runHack(){
-		hack_thread = new Thread(new Runnable(){
-		@Override
-		public void run() {
-			// TODO Auto-generated method stub
-			String user = jt_username.getText().toString();
-			jtextf.get(0).setText(user);
-			String filepre = "dictionarylist";
-			System.out.print("Trying password of lenght "+minchar+" - "+maxchar+" characters");
-			DictionaryListGenerator.generateFile(minchar, maxchar, max_attempts);
-			File file = DictionaryListGenerator.getFile(minchar, maxchar, max_attempts);
-			HackUserAccount.dictionaryAttack(file);
+				String filepre = "dictionarylist";
+				System.out.print("Trying password of lenght " + minchar + " - "
+						+ maxchar + " characters");
+				DictionaryListGenerator.generateFile(minchar, maxchar,max_attempts);
+				File file = DictionaryListGenerator.getFile(minchar, maxchar,
+						max_attempts);
+				HackUserAccount.dictionaryAttack(file);
 			}
 		});
 		hack_thread.start();
 	}
-	
-	public static boolean dictionaryAttack(File file){
-		try{
-			long startTime = System.currentTimeMillis(), endTime;
+
+	public static boolean dictionaryAttack(File file) {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				long startTime = System.currentTimeMillis(), endTime;
+				active = true;
+				while(active){
+					endTime = System.currentTimeMillis();
+					jl_password_check.setText("password attempt: "
+							+ password_attempts + "\n\n time: "
+							+ ((endTime - startTime) / 1000) + " seconds");
+				}
+				
+			}
+		});
+		thread.start();
+		String password = "N/A";
+		try {
 			Scanner scan = new Scanner(file);
-			while(scan.hasNextLine()){
-				endTime = System.currentTimeMillis();
-				String password = scan.nextLine();
+			String user;
+			while (scan.hasNextLine()) {
+				password = scan.nextLine();
+				user = jt_username.getText().toString();
+				jtextf.get(0).setText(user);
 				jtextf.get(1).setText(password);
-				jl_password_check.setText("password attempt: "+password_attempts+"\n\n time: "+((endTime - startTime)/1000)+" seconds");
-				System.out.println(jtextf.get(0).getText().toString()+" Hack number: "+password_attempts+" password: "+password);
+				System.out.println(jtextf.get(0).getText().toString()
+						+ " Hack number: " + password_attempts + " password: "
+						+ password);
 				blogin.doClick();
+				jtextf.get(0).setText(user);
+				jtextf.get(1).setText(password);
+				setUserLoginFrame();
+				getFields();
 				ArrayList<Component> c = getAllComponents(frame);
-				if(c.size() != comps.size()){		
+				if (c.size() != comps.size()) {
 					System.out.println("Not the same screen");
-					jl_password_check.setText("password: "+password);
+					jl_password_check.setText("password: " + password);
+					active = false;
+					thread.join();
 					return true;
 				}
-				getFields();
 				password_attempts++;
 			}
-			login_thread.join();
+			active = false;
 			return false;
-		}catch(IOException e){
+		} catch (IOException e) {
 			e.printStackTrace();
+			active = false;
 			return false;
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			jl_password_check.setText("user password : "+password);
+			active = false;
 			return false;
 		} 
 	}
-	
-	public static void getFields(){
+
+	public static void getFields() {
+		jtextf.clear();
 		comps = getAllComponents(frame);
 		System.out.println(comps.size());
-		for(Component comp : comps){
-			if(comp instanceof JTextField){
+		for (Component comp : comps) {
+			if (comp instanceof JTextField) {
 				jtextf.add(((JTextField) comp));
-			}else if(comp instanceof JButton){
-				if(((JButton) comp).getText().equals("Login"))
+			} else if (comp instanceof JButton) {
+				if (((JButton) comp).getText().equals("Login"))
 					blogin = (JButton) comp;
-			}else if(comp instanceof JLabel){
-				if(!((JLabel) comp).getText().equals("Username") || !((JLabel) comp).getText().equals("Password"))
+			} else if (comp instanceof JLabel) {
+				if (!((JLabel) comp).getText().equals("Username")
+						|| !((JLabel) comp).getText().equals("Password"))
 					jl_status = (JLabel) comp;
 			}
-		}		
+		}
 	}
-	
-	
+
 	public static ArrayList<Component> getAllComponents(final Container c) {
-	    Component[] comps = c.getComponents();
-	    ArrayList<Component> compList = new ArrayList<Component>();
-	    for (Component comp : comps) {
-	        compList.add(comp);
-	        if (comp instanceof Container)
-	            compList.addAll(getAllComponents((Container) comp));
-	    }
-	    return compList;
+		Component[] comps = c.getComponents();
+		ArrayList<Component> compList = new ArrayList<Component>();
+		for (Component comp : comps) {
+			compList.add(comp);
+			if (comp instanceof Container)
+				compList.addAll(getAllComponents((Container) comp));
+		}
+		return compList;
 	}
 
 }
