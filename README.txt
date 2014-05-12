@@ -1,12 +1,13 @@
-@author:        Oshane Bailey
-@id:            620042528
-@project nane:  Dictionary Attack
+@author:              Oshane Bailey
+@id:                  620042528
+@project nane:        Dictionary Attack
 
-@Demo:          https://www.youtube.com/watch?v=yqCx9HLmJqQ
-@git repo:      https://github.com/b4oshany/Hijacking-Login-Demo/commits?author=b4oshany
+@short video demo:    https://www.youtube.com/watch?v=4miRC8fJAo8&edit=vd
+@long video Demo:     https://www.youtube.com/watch?v=yqCx9HLmJqQ
+@git repo:            https://github.com/b4oshany/Hijacking-Login-Demo
 
 Description:
--------------------------------- User Login ---------------------------------------------------------
+-------------------------------- User Login -----------------------------------
 This is an Java application that simulates password creation for a userid on register, and handles
 authentication attempts. Passwords that are generated are hashed with the sha1 hashing algorithm and stored in a text file
 with the associated userid and status, "assest/data/dictionarylist*-*-*.txt" (the * is are wildcards which represent numbers; minimum and maximum character length and number of words to try).
@@ -32,7 +33,7 @@ account until it status is set to “unlocked”.
 To login or register, run the UserAccountForm main function, where you will be provided with a login form. If you click register then it will give you a registration form.
 Once you register, click login, inorder to login with that user.
 
---------------------------- Hacking Login -----------------------------------------------------------------------
+--------------------------- Hacking Login ---------------------------------------
 
 The part of the application is run by, running the HackUserAccountForm mainn function. Once it is runned, it will call the main function of the User Login, and provide its own form, where
 you should enter the userid, minimum (default to 8) and maximum character (default to 16) length and number of words to try (default 2000).
@@ -40,7 +41,7 @@ you should enter the userid, minimum (default to 8) and maximum character (defau
 This process, autogenerate passwords between the given charcher length, the amount of passwords to be generate by the number of attempts. These passwords are then stored in a text file and passed to the dictionary attacker function, which
 fills in the login form of the UserAccountForm Jframe, and perform a doClick function on the login button. Once there is a login, or change of status screen then the password has been stored
 
----------------------------- Assumptions --------------------------------------------------------------------------
+---------------------------- Assumptions -----------------------------------------
 
 Attack Success Percentage.
 Considering that there wil be x characters, and it password is alphanumeric, then the permutation and the maximum tries should be 36^x, for instance, a password of 8 character length has 38^8 possibility, which result in less than 0.5% probability of getting that password.

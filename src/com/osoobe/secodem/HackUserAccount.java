@@ -210,21 +210,26 @@ public class HackUserAccount {
 		return true;
 	}
 	
-	public static void showOverhead(){
-		jl_att.setText("password attempt: "
-				+ password_attempts + "\n\n time: "
-				+ ((endTime - startTime) / 1000) + " seconds");
-	}
-
-	public static boolean dictionaryAttack(File file) {	
+	public static boolean dictionaryAttack(File file) {
 		String password = "N/A";
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(active){
+					endTime = System.currentTimeMillis();
+					jl_att.setText("password attempt: "
+							+ password_attempts + "\n\n time: "
+							+ ((endTime - startTime) / 1000) + " seconds");
+				}				
+			}
+		});
+		thread.start();
 		try {
 			Scanner scan = new Scanner(file);
 			startTime = endTime = System.currentTimeMillis();
 			String user;
 			int count = 0;
 			while (scan.hasNextLine()) {
-				showOverhead();
 				if(!active){
 					break;
 				}
@@ -247,6 +252,12 @@ public class HackUserAccount {
 						if (c.size() != comps.size()) {
 							System.out.println("hacked");
 							active = false;
+							try {
+								thread.join();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
 							return displayPassword(password, "correct");
 						}
 						password_attempts++;
@@ -254,19 +265,30 @@ public class HackUserAccount {
 					count++;
 				}else{
 					active = false;
+					try {
+						thread.join();
+					} catch (InterruptedException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}					
 					return displayPassword(password, "wrong");
 				}
 			}
 			active = false;
-			return false;
 		} catch (IOException e) {
 			e.printStackTrace();
 			active = false;
-			return false;
 		} catch (Exception e){
 			active = false;
-			return false;
+		}finally{
+			try {
+				thread.join();
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		return false;
 	}
 
 	public static void getFields() {
